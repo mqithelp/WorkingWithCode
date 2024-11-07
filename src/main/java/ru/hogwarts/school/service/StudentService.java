@@ -1,10 +1,13 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class StudentService {
     private Map<Long, Student> students = new HashMap<>();
     private Long id = 0L;
@@ -12,8 +15,9 @@ public class StudentService {
     public Student addStudent(Student student) {
         if (student == null) return null;
         this.id++;
+        student.setId(this.id);
         students.put(this.id, student);
-        return student;
+        return students.get(this.id);
     }
 
     public Student getStudent(Long id) {
@@ -37,5 +41,8 @@ public class StudentService {
         deletedStudent = students.get(id);
         students.remove(id);
         return deletedStudent;
+    }
+    public Collection<Student> getAllStudents() {
+        return students.values();
     }
 }
