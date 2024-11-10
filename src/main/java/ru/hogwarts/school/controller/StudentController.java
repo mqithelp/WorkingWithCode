@@ -4,17 +4,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
+import ru.hogwarts.school.service.StudentServiceImpl;
 
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("student")
 public class StudentController {
+
     private final StudentService studentService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentServiceImpl studentService) {
         this.studentService = studentService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+        Student createdStudent = studentService.addStudent(student);
+        return ResponseEntity.ok(createdStudent);
     }
 
     @GetMapping("{id}")
@@ -22,12 +29,19 @@ public class StudentController {
         Student student = studentService.getStudent(id);
         if (student == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(student);
+
     }
 
-    @PostMapping
-    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
-        Student createdStudent = studentService.addStudent(student);
-        return ResponseEntity.ok(createdStudent);
+    @PutMapping
+    public ResponseEntity<Student> updateStudent(@RequestBody Student student) {
+        studentService.updateStudent(student);
+        if (student == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(student);
+    }
+
+    @DeleteMapping("{id}")
+    public Student delStudent(@PathVariable Long id) {
+        return studentService.deleteStudent(id);
     }
 
     @GetMapping("all")
