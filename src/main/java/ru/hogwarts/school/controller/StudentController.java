@@ -48,4 +48,9 @@ public class StudentController {
     public Collection<Student> getAll() {
         return studentService.getAllStudents();
     }
+    @GetMapping()
+    public Collection<Student> getByAge(@RequestParam int age) {
+        return studentService.getStudentByAge(age);
+    }
+
 }
