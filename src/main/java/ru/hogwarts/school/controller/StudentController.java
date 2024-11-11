@@ -52,5 +52,12 @@ public class StudentController {
     public Collection<Student> getByAge(@RequestParam int age) {
         return studentService.getStudentByAge(age);
     }
+    @PutMapping("/db")
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+        studentService.createStudent(student);
+        if (student == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(student);
+    }
+
 
 }

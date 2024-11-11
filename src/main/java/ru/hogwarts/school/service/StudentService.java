@@ -17,4 +17,6 @@ public interface StudentService {
     Collection<Student> getAllStudents();
 
     Collection<Student> getStudentByAge(int age);
+
+    Student createStudent(Student student);
 }
