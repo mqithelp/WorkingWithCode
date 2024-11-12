@@ -19,29 +19,28 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student addStudent(Student student) {
+
         return studentRepository.save(student);
     }
 
     @Override
     public Student getStudent(Long id) {
-
-        return null;
+        return studentRepository.findById(id).get();
     }
 
     @Override
-    public Student updateStudent(Student student) {
-        return student;
+    public Student editStudent(Student student) {
+        return studentRepository.save(student);
     }
 
     @Override
-    public Student deleteStudent(Long id) {
-
-        return null;
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id);
     }
 
     @Override
     public Collection<Student> getAllStudents() {
-        return null;
+        return studentRepository.findAll();
     }
 
     @Override
@@ -49,8 +48,5 @@ public class StudentServiceImpl implements StudentService {
         return null;
 //                students.values().stream().filter(student -> student.getAge() == age).collect(Collectors.toList());
     }
-    @Override
-    public Student createStudent(Student student) {
-        return studentRepository.save(student);
-    }
+
 }
