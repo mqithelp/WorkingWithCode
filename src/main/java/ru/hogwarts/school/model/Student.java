@@ -15,7 +15,7 @@ public class Student {
     private Long id;
 
     private String name;
-    int age;
+    private int age;
 
     public Student() {
     }
