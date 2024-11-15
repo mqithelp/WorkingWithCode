@@ -10,9 +10,9 @@ public interface FacultyService {
 
     Faculty getFaculty(Long id);
 
-    Faculty updateFaculty(Faculty faculty);
+    Faculty editFaculty(Long id, Faculty faculty);
 
-    Faculty deleteFaculty(Long id);
+    void deleteFaculty(Long id);
 
     Collection<Faculty> getAllFaculties();
 
