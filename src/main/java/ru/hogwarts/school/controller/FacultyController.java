@@ -48,8 +48,10 @@ public class FacultyController {
     }
 
     @GetMapping()
-    public Collection<Faculty> getByColor(@RequestParam String color) {
-        return facultyService.getFacultyByColor(color);
+    public Collection<Faculty> getByColorOrName(
+            @RequestParam(required = false) String color,
+            @RequestParam(required = false) String name) {
+        return facultyService.getByColorOrName(color,name);
     }
 
 }

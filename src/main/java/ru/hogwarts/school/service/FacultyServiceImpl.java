@@ -44,8 +44,9 @@ public class FacultyServiceImpl implements FacultyService {
     public Collection<Faculty> getAllFaculties() {
         return facultyRepository.findAll();
     }
+
     @Override
-    public Collection<Faculty> getFacultyByColor(String color) {
-        return facultyRepository.findByColor(color);
+    public Collection<Faculty> getByColorOrName(String color, String name) {
+        return facultyRepository.findByColorOrName(color,name);
     }
 }
