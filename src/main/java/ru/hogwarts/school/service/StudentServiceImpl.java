@@ -52,4 +52,9 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findByAgeBetween(min, max);
     }
 
+    @Override
+    public Collection<Student> getStudentByFaculty(String name) {
+        return studentRepository.findStudentsByFaculty_Name(name);
+    }
+
 }

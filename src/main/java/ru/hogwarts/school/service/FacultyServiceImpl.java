@@ -3,9 +3,11 @@ package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -47,6 +49,16 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Collection<Faculty> getByColorOrName(String color, String name) {
-        return facultyRepository.findByColorOrName(color,name);
+        return facultyRepository.findByColorIgnoreCaseOrNameIgnoreCase(color,name);
     }
+
+    @Override
+    public Faculty getfacultyByStudents(String name) {
+        return facultyRepository.findFacultyByNameContainingIgnoreCase(name);
+    }
+
+//    @Override
+//    public Collection<Faculty> getFacultiesByStudents(String name) {
+//        return facultyRepository.findFacultiesByName(name);
+//    }
 }

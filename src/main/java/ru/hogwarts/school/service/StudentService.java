@@ -19,4 +19,6 @@ public interface StudentService {
     Collection<Student> getStudentByAge(int age);
 
     Collection<Student> findByAgeBetween(int min, int max);
+
+    Collection<Student> getStudentByFaculty(String name);
 }
