@@ -10,9 +10,12 @@ public class Avatar {
     private String filePath;
     private long fileSize;
     private String mediaType;
+
+    @Lob
     private byte[] data;
+
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "student_id")
     private Student student;
 
     public Long getId() {

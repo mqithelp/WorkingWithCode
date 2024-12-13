@@ -56,4 +56,9 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findStudentsByFaculty_Name(name);
     }
 
+    @Override
+    public Student getStudentById(Long id) {
+        return studentRepository.getStudentsById(id);
+    }
+
 }
