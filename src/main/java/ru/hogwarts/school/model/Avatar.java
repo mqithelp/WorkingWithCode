@@ -57,4 +57,12 @@ public class Avatar {
     public void setData(byte[] data) {
         this.data = data;
     }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 }

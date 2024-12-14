@@ -1,16 +1,17 @@
 package ru.hogwarts.school.service;
 
-import java.io.File;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.AvatarRepository;
 
-import java.io.IOException;
+import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 @Transactional
@@ -28,11 +29,31 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
-    public void uploadAvatar(Long student_id, MultipartFile file) throws IOException {
-        Student student = studentService.getStudentById(student_id);
-        Path filePath = Path.of(avatarImageDir, student_id + "." + getExtension(file.getOriginalFilename()));
+    public void uploadAvatar(Long studentID, MultipartFile avatarFile) throws IOException {
+        Student student = studentService.getStudentById(studentID);
+        Path filePath = Path.of(avatarImageDir, studentID + "." + getExtension(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(filePath);
+        try (InputStream is = avatarFile.getInputStream();
+             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+        ) {
+            bis.transferTo(bos);
+        };
+        Avatar avatar = findAvatar(studentID);
+        avatar.setStudent(student);
+        avatar.setFilePath(filePath.toString());
+        avatar.setFileSize(avatarFile.getSize());
+        avatar.setMediaType(avatarFile.getContentType());
+        avatar.setData(avatarFile.getBytes());
+        avatarRepository.save(avatar);
 
+    }
+
+    @Override
+    public Avatar findAvatar(Long studentId) {
+        return avatarRepository.findByStudent_Id(studentId).orElse(new Avatar());
     }
 
     private String getExtension(String originalFilename) {
