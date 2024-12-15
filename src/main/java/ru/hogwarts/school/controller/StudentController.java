@@ -49,6 +49,7 @@ public class StudentController {
     public Collection<Student> getAll() {
         return studentService.getAllStudents();
     }
+
     @GetMapping()
     public Collection<Student> getByAge(@RequestParam int age) {
         return studentService.getStudentByAge(age);
@@ -56,7 +57,7 @@ public class StudentController {
 
     @GetMapping("find")
     public Collection<Student> findByAgeBetween(@RequestParam int min, @RequestParam int max) {
-        return studentService.findByAgeBetween(min,max);
+        return studentService.findByAgeBetween(min, max);
     }
 
     @GetMapping("get")
@@ -65,5 +66,9 @@ public class StudentController {
         return studentService.getStudentByFaculty(name);
     }
 
+    @GetMapping("/count")
+    public Long getCountAllStudent() {
+        return studentService.getCountAllStudent();
+    }
 
 }
