@@ -18,6 +18,9 @@ public class Student {
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Avatar avatar;
+
     public Faculty getFaculty() {
         return faculty;
     }
