@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.GetLimitStudents;
 import ru.hogwarts.school.service.StudentService;
 import ru.hogwarts.school.service.StudentServiceImpl;
 
@@ -74,6 +75,11 @@ public class StudentController {
     @GetMapping("/avg")
     public Float getAvgAgeStudents() {
         return studentService.getAvgAgeStudents();
+    }
+
+    @GetMapping("/last")
+    public Collection<GetLimitStudents> getLastFiveStudents() {
+        return studentService.getLimitStudents();
     }
 
 }

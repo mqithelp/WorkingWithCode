@@ -69,7 +69,11 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Float getAvgAgeStudents() {
         return studentRepository.getAvgAgeStudents();
-        //return studentRepository.count();
+    }
+
+    @Override
+    public Collection<GetLimitStudents> getLimitStudents() {
+        return studentRepository.getLastFiveStudents();
     }
 
 }

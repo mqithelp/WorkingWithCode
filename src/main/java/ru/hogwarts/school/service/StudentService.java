@@ -27,4 +27,7 @@ public interface StudentService {
     Long getCountAllStudent();
 
     Float getAvgAgeStudents();
+
+    Collection<GetLimitStudents> getLimitStudents();
+
 }
