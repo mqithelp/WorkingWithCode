@@ -63,7 +63,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Long getCountAllStudent() {
-        return studentRepository.count();
+        return studentRepository.getCountStudents();
+        //return studentRepository.count();
     }
 
 }
