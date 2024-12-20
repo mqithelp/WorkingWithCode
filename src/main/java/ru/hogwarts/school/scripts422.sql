@@ -4,7 +4,6 @@ CREATE TABLE driver
     age         INTEGER CHECK ( age > 18 ) NOT NULL,
     name        CHAR(50),
     license     boolean,
-    id_register BIGINT
 );
 CREATE TABLE cars
 (
@@ -13,7 +12,6 @@ CREATE TABLE cars
     make        CHAR(50),
     model       CHAR(50),
     price       INTEGER CHECK ( price > 0 ),
-    id_register BIGINT
 );
 
 CREATE TABLE driver_cars
