@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.GetLimitStudents;
 import ru.hogwarts.school.service.StudentService;
 import ru.hogwarts.school.service.StudentServiceImpl;
 
@@ -49,6 +50,7 @@ public class StudentController {
     public Collection<Student> getAll() {
         return studentService.getAllStudents();
     }
+
     @GetMapping()
     public Collection<Student> getByAge(@RequestParam int age) {
         return studentService.getStudentByAge(age);
@@ -56,7 +58,7 @@ public class StudentController {
 
     @GetMapping("find")
     public Collection<Student> findByAgeBetween(@RequestParam int min, @RequestParam int max) {
-        return studentService.findByAgeBetween(min,max);
+        return studentService.findByAgeBetween(min, max);
     }
 
     @GetMapping("get")
@@ -65,5 +67,19 @@ public class StudentController {
         return studentService.getStudentByFaculty(name);
     }
 
+    @GetMapping("/count")
+    public Long getCountAllStudent() {
+        return studentService.getCountAllStudent();
+    }
+
+    @GetMapping("/avg")
+    public Float getAvgAgeStudents() {
+        return studentService.getAvgAgeStudents();
+    }
+
+    @GetMapping("/last")
+    public Collection<GetLimitStudents> getLastFiveStudents() {
+        return studentService.getLimitStudents();
+    }
 
 }

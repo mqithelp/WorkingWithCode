@@ -23,4 +23,11 @@ public interface StudentService {
     Collection<Student> getStudentByFaculty(String name);
 
     Student getStudentById(Long id);
+
+    Long getCountAllStudent();
+
+    Float getAvgAgeStudents();
+
+    Collection<GetLimitStudents> getLimitStudents();
+
 }
