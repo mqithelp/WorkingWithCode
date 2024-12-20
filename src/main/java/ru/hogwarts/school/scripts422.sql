@@ -3,7 +3,7 @@ CREATE TABLE driver
     id          SERIAL PRIMARY KEY,
     age         INTEGER CHECK ( age > 18 ) NOT NULL,
     name        CHAR(50),
-    license     boolean,
+    license     boolean
 );
 CREATE TABLE cars
 (
@@ -11,7 +11,7 @@ CREATE TABLE cars
     age         INTEGER CHECK ( age > 18 ) NOT NULL,
     make        CHAR(50),
     model       CHAR(50),
-    price       INTEGER CHECK ( price > 0 ),
+    price       INTEGER CHECK ( price > 0 )
 );
 
 CREATE TABLE driver_cars
