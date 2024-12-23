@@ -1,16 +1,16 @@
 CREATE TABLE driver
 (
-    id          SERIAL PRIMARY KEY,
+    id          BIGSERIAL PRIMARY KEY,
     age         INTEGER CHECK ( age > 18 ) NOT NULL,
-    name        CHAR(50),
+    name        VARCHAR(50),
     license     boolean
 );
 CREATE TABLE cars
 (
-    id          SERIAL PRIMARY KEY,
+    id          BIGSERIAL PRIMARY KEY,
     age         INTEGER CHECK ( age > 18 ) NOT NULL,
-    make        CHAR(50),
-    model       CHAR(50),
+    make        VARCHAR(50),
+    model       VARCHAR(50),
     price       INTEGER CHECK ( price > 0 )
 );
 
