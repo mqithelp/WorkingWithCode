@@ -6,9 +6,8 @@ FROM student
 order by student.name;
 
 
-SELECT
-    student.name as Имя
-     ,age as Возраст
+SELECT student.name as Имя
+     , age          as Возраст
 FROM student
          INNER JOIN avatar ON avatar.student_id = student.id
 order by student.name;
