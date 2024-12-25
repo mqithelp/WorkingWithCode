@@ -1,3 +1,4 @@
 databaseChangeLog:
   - include:
-      file: liquibase/scripts/lessons-Migrations&Indexes.sql
+      file: liquibase/scripts/lessons-migrations-and-indexes.sql
+
