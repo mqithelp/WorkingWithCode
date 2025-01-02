@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
+import ru.hogwarts.school.service.GetOneFaculty;
+
 import java.util.Collection;
 
 @RestController
@@ -58,4 +60,8 @@ public class FacultyController {
             @RequestParam(required = false) String name) {
         return facultyService.getfacultyByStudents(name);
     }
+@GetMapping("lf")
+    public Collection<GetOneFaculty> getOneLongestNameFaculty() {
+        return facultyService.getOneFacultyByLength();
+}
 }
