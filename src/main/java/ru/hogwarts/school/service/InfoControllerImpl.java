@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.LongStream;
@@ -9,13 +10,19 @@ import java.util.stream.LongStream;
 @Service
 public class InfoControllerImpl implements InfoControllerInt {
 
-    private final long K = 1_000_000;
-    Logger logger = LoggerFactory.getLogger(InfoControllerImpl.class);
+    @Value("${server.port}")
+    private Integer portServers;
 
     @Override
     public Integer getPort() {
-        return 0;
+        return portServers;
     }
+
+
+    //начиная с этого значения цикл начинает проигрывать параллельному вычислению. На моей ЭВМ ;-)
+    private final long K = 1_000_00000;
+    Logger logger = LoggerFactory.getLogger(InfoControllerImpl.class);
+
 
     @Override
     public Long getSumCycle() {
