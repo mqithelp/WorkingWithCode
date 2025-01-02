@@ -82,4 +82,9 @@ public class StudentController {
         return studentService.getLimitStudents();
     }
 
+    @GetMapping("/filterA")
+    public Collection<GetLimitStudents> getAllStudentsFilterByCharASorted() {
+        return studentService.getAllStudentsFilterByCharASorted();
+    }
+
 }

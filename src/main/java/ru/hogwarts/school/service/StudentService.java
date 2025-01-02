@@ -30,4 +30,5 @@ public interface StudentService {
 
     Collection<GetLimitStudents> getLimitStudents();
 
+    Collection<GetLimitStudents> getAllStudentsFilterByCharASorted();
 }
