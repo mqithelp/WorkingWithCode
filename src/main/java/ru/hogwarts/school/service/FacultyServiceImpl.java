@@ -57,4 +57,9 @@ public class FacultyServiceImpl implements FacultyService {
         return facultyRepository.findByStudents_NameIgnoreCase(name);
     }
 
+    @Override
+    public Collection<GetOneFaculty> getOneFacultyByLength() {
+        return facultyRepository.getLongestFaculty();
+    }
+
 }

@@ -92,4 +92,10 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.getLastFiveStudents();
     }
 
+    @Override
+    public Collection<GetLimitStudents> getAllStudentsFilterByCharASorted() {
+        logger.info("Был выполнен метод getAllStudentsFilterByCharASorted()");
+        return studentRepository.getAllStudentsSorted();
+    }
+
 }

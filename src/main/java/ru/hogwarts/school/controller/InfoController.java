@@ -8,7 +8,7 @@ import ru.hogwarts.school.service.InfoControllerInt;
 @RestController
 @RequestMapping("get")
 public class InfoController {
-  private final InfoControllerInt infoControllerInt;
+    private final InfoControllerInt infoControllerInt;
 
     public InfoController(InfoControllerInt infoControllerInt) {
         this.infoControllerInt = infoControllerInt;
@@ -17,5 +17,11 @@ public class InfoController {
     @GetMapping("/port")
     public Integer port() {
         return infoControllerInt.getPort();
+    }
+
+    @GetMapping("sum")
+    public Long getSumParallel() {
+        infoControllerInt.getSumCycle();
+        return infoControllerInt.getSumParallel();
     }
 }
