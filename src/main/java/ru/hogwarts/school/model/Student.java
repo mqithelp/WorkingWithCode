@@ -14,11 +14,11 @@ public class Student {
     private String name;
     private int age;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Avatar avatar;
 
     public Faculty getFaculty() {

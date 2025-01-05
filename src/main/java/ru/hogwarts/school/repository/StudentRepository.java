@@ -3,6 +3,7 @@ package ru.hogwarts.school.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.GetAllStudentsName;
 import ru.hogwarts.school.service.GetLimitStudents;
 
 import java.util.Collection;
@@ -27,4 +28,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query(value = "SELECT id as id, UPPER(name) as name FROM student where name ILIKE 'А%' order by name;", nativeQuery = true)
     Collection<GetLimitStudents> getAllStudentsSorted();
+
+    @Query(value = "SELECT name as name FROM student;", nativeQuery = true)
+    Collection<GetAllStudentsName> getAllStudentsName();
+
+
 }
