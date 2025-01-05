@@ -87,4 +87,10 @@ public class StudentController {
         return studentService.getAllStudentsFilterByCharASorted();
     }
 
+    @GetMapping("/print-parallel")
+    public ResponseEntity<Student> getStudentsPrintParallel() {
+        studentService.getStudentsPrintParallel();
+        return ResponseEntity.ok().build();
+    }
+
 }

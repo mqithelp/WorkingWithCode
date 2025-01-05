@@ -98,4 +98,9 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.getAllStudentsSorted();
     }
 
+    @Override
+    public void getStudentsPrintParallel() {
+        System.out.println("Проверка параллельных потоков.");
+    }
+
 }
