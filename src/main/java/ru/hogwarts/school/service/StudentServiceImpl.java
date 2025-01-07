@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+    private int count = 0;
 
     private final StudentRepository studentRepository;
 
@@ -98,7 +99,7 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.getAllStudentsSorted();
     }
 
-    @Override
+
     public void getStudentsPrintParallel() {
 //        StudentServiceImpl studentServiceImpl = new StudentServiceImpl();
         System.out.println("Проверка параллельных потоков.");
@@ -134,11 +135,38 @@ public class StudentServiceImpl implements StudentService {
             System.out.println("6 - " + allListNamesStudents.get(6));
             System.out.println("7 - " + allListNamesStudents.get(7));
         }).start();
-
     }
 
-    public void getLocalStudentsPrintParallel() {
 
+    @Override
+    public void getStudentsPrintParallelSync() {
+        System.out.println("Проверка параллельных синхронизированных потоков.");
+        Collection<GetAllStudentsName> allStudents = studentRepository.getAllStudentsName();
+        List<String> allListNamesStudents = allStudents.stream().map(GetAllStudentsName::getName).toList();
+        System.out.println(allListNamesStudents.get(0));
+        System.out.println(allListNamesStudents.get(1));
+        System.out.println("--------------");
+        new Thread(() -> {
+            syncBlock(allListNamesStudents, 2, 3);
+        }).start();
+        new Thread(() -> {
+            syncBlock(allListNamesStudents, 4, 5);
+        }).start();
+        new Thread(() -> {
+            syncBlock(allListNamesStudents, 6, 7);
+        }).start();
+    }
+
+    public synchronized void syncBlock(List<String> list, int a, int b) {
+        try {
+            System.out.println("Синхронизируемся... 500 мс. " + count);
+            System.out.println(a + " - " + list.get(a));
+            System.out.println(b + " - " + list.get(b));
+            count++;
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

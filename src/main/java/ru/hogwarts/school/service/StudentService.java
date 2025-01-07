@@ -33,4 +33,6 @@ public interface StudentService {
     Collection<GetLimitStudents> getAllStudentsFilterByCharASorted();
 
     void getStudentsPrintParallel();
+
+    void getStudentsPrintParallelSync();
 }

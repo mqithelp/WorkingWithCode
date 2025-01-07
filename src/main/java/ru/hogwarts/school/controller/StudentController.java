@@ -93,4 +93,10 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<Student> getStudentsPrintParallelSync() {
+        studentService.getStudentsPrintParallelSync();
+        return ResponseEntity.ok().build();
+    }
+
 }
