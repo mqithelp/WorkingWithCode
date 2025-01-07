@@ -16,7 +16,7 @@ public class Avatar {
     @JsonIgnore
     private byte[] data;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id")
     private Student student;
 
