@@ -16,7 +16,6 @@ public class StudentServiceImpl implements StudentService {
 
     Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
-
     public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
@@ -101,10 +100,44 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void getStudentsPrintParallel() {
+//        StudentServiceImpl studentServiceImpl = new StudentServiceImpl();
         System.out.println("Проверка параллельных потоков.");
         Collection<GetAllStudentsName> allStudents = studentRepository.getAllStudentsName();
-//        allStudents.stream().toList().forEach(System.out::println);
-        allStudents.stream().map(GetAllStudentsName::getName).toList().forEach(System.out::println);
+        List<String> allListNamesStudents = allStudents.stream().map(GetAllStudentsName::getName).toList();
+        System.out.println(allListNamesStudents.get(0));
+        System.out.println(allListNamesStudents.get(1));
+        System.out.println("--------------");
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("2 - " + allListNamesStudents.get(2));
+            System.out.println("3 - " + allListNamesStudents.get(3));
+        }).start();
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("4 - " + allListNamesStudents.get(4));
+            System.out.println("5 - " + allListNamesStudents.get(5));
+        }).start();
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("6 - " + allListNamesStudents.get(6));
+            System.out.println("7 - " + allListNamesStudents.get(7));
+        }).start();
+
+    }
+
+    public void getLocalStudentsPrintParallel() {
 
     }
 
