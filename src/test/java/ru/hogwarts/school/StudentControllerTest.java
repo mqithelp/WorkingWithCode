@@ -7,14 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class StudentControllerTest {
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @LocalServerPort
     private int port;
 
@@ -55,5 +65,20 @@ public class StudentControllerTest {
         Assertions.assertEquals(expectedStudent, response.getBody()); // Достаем значение по ключу
    }
 
+
+    @Test
+    public void testGetStudentByFaculity() throws Exception {
+        String url = baseUrl + "/get?name={name}";
+        List<Student> expectedStudent;
+        InputStream is = getClass().getResourceAsStream("/griffindor.json");
+        if (is == null) {
+            throw new FileNotFoundException("Файл griffindor.json не найден");
+        }
+        expectedStudent = objectMapper.readValue(is, new TypeReference<List<Student>>() {});
+        ResponseEntity<List<Student>> response = restTemplate.exchange(url, HttpMethod.GET,null,
+                new ParameterizedTypeReference<List<Student>>() {},"Гриффиндор");
+
+        Assertions.assertEquals(expectedStudent, response.getBody()); // Достаем значение по ключу
+    }
 
 }

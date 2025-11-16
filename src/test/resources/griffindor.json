@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "name": "Harry Potter",
+    "age": 17,
+    "faculty": {
+      "id": 1,
+      "name": "Гриффиндор",
+      "color": "красный и золотой"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Hermione Granger",
+    "age": 17,
+    "faculty": {
+      "id": 1,
+      "name": "Гриффиндор",
+      "color": "красный и золотой"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Ron Weasley",
+    "age": 17,
+    "faculty": {
+      "id": 1,
+      "name": "Гриффиндор",
+      "color": "красный и золотой"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Seamus Finnigan",
+    "age": 17,
+    "faculty": {
+      "id": 1,
+      "name": "Гриффиндор",
+      "color": "красный и золотой"
+    }
+  },
+  {
+    "id": 10,
+    "name": "Ginny Weasley",
+    "age": 16,
+    "faculty": {
+      "id": 1,
+      "name": "Гриффиндор",
+      "color": "красный и золотой"
+    }
+  },
+  {
+    "id": 11,
+    "name": "Dean Thomas",
+    "age": 17,
+    "faculty": {
+      "id": 1,
+      "name": "Гриффиндор",
+      "color": "красный и золотой"
+    }
+  },
+  {
+    "id": 18,
+    "name": "Katie Bell",
+    "age": 18,
+    "faculty": {
+      "id": 1,
+      "name": "Гриффиндор",
+      "color": "красный и золотой"
+    }
+  }
+]
