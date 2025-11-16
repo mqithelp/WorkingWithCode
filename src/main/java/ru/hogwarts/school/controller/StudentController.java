@@ -20,11 +20,11 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @PostMapping
-    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
-        Student createdStudent = studentService.addStudent(student);
-        return ResponseEntity.ok(createdStudent);
-    }
+//    @PostMapping
+//    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+//        Student createdStudent = studentService.addStudent(student);
+//        return ResponseEntity.ok(createdStudent);
+//    }
 
     @GetMapping("{id}")
     public ResponseEntity<Student> readStudent(@PathVariable Long id) {
@@ -33,12 +33,12 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @PutMapping
-    public ResponseEntity<Student> editStudent(@RequestBody Student student) {
-        studentService.editStudent(student);
-        if (student == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        return ResponseEntity.ok(student);
-    }
+//    @PutMapping
+//    public ResponseEntity<Student> editStudent(@RequestBody Student student) {
+//        studentService.editStudent(student);
+//        if (student == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        return ResponseEntity.ok(student);
+//    }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Student> delStudent(@PathVariable Long id) {
@@ -51,10 +51,10 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
-    @GetMapping()
-    public Collection<Student> getByAge(@RequestParam int age) {
-        return studentService.getStudentByAge(age);
-    }
+//    @GetMapping()
+//    public Collection<Student> getByAge(@RequestParam int age) {
+//        return studentService.getStudentByAge(age);
+//    }
 
     @GetMapping("find")
     public Collection<Student> findByAgeBetween(@RequestParam int min, @RequestParam int max) {
