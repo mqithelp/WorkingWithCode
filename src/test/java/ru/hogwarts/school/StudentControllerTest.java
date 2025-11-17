@@ -1,5 +1,6 @@
 package ru.hogwarts.school;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,8 @@ public class StudentControllerTest {
 
     private String baseUrl;
 
+    private Long tempId;
+
     @BeforeEach
     void setUp() {
         baseUrl = "http://localhost:" + port + "/student";
@@ -44,7 +47,7 @@ public class StudentControllerTest {
     public void testGetAllStudentsCount() throws Exception {
         String url = baseUrl + "/count";
         ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
-        Assertions.assertEquals(20, response.getBody()); // Достаем значение по ключу
+        Assertions.assertEquals(20, response.getBody());
 
     }
 
@@ -62,7 +65,7 @@ public class StudentControllerTest {
         expectedStudent.setFaculty(expectedFaculty);
 
         ResponseEntity<Student> response = restTemplate.getForEntity(url, Student.class, 5);
-        Assertions.assertEquals(expectedStudent, response.getBody()); // Достаем значение по ключу
+        Assertions.assertEquals(expectedStudent, response.getBody());
    }
 
 
@@ -78,7 +81,73 @@ public class StudentControllerTest {
         ResponseEntity<List<Student>> response = restTemplate.exchange(url, HttpMethod.GET,null,
                 new ParameterizedTypeReference<List<Student>>() {},"Гриффиндор");
 
-        Assertions.assertEquals(expectedStudent, response.getBody()); // Достаем значение по ключу
+        Assertions.assertEquals(expectedStudent, response.getBody());
+    }
+
+    @Test
+    public void testAddStudent() throws Exception {
+        String url = baseUrl;
+        Student expectedStudent = new Student();
+        Faculty expectedFaculty = new Faculty();
+        expectedStudent.setId(5000L);
+        expectedStudent.setAge(16);
+        expectedStudent.setName("Test Student");
+        expectedFaculty.setId(3L);
+        expectedFaculty.setName("Когтевран");
+        expectedFaculty.setColor("синий и бронзовый");
+        expectedStudent.setFaculty(expectedFaculty);
+
+        Student result = restTemplate.postForObject(baseUrl, expectedStudent, Student.class);
+
+        Assertions.assertNotNull(result.getId());
+        expectedStudent.setId(result.getId());
+
+        Assertions.assertEquals(expectedStudent, result);
+        tempId = expectedStudent.getId();
+    }
+
+    @Test
+    public void testFullStudentLifecycleWithFaculty() throws Exception {
+        String url = baseUrl;
+        Student expectedStudent = new Student();
+        Faculty expectedFaculty = new Faculty();
+        expectedStudent.setId(5000L);
+        expectedStudent.setAge(16);
+        expectedStudent.setName("Test Student");
+        expectedFaculty.setId(3L);
+        expectedFaculty.setName("Когтевран");
+        expectedFaculty.setColor("синий и бронзовый");
+        expectedStudent.setFaculty(expectedFaculty);
+
+        Student result = restTemplate.postForObject(baseUrl, expectedStudent, Student.class);
+
+        Assertions.assertNotNull(result.getId());
+        expectedStudent.setId(result.getId());
+
+        Assertions.assertEquals(expectedStudent, result);
+        Long studentId = result.getId();
+
+        try {
+            // EDIT
+            Student updateStudent = new Student();
+            updateStudent.setId(studentId);
+            updateStudent.setAge(18);
+            updateStudent.setName("Updated Test Student");
+            updateStudent.setFaculty(expectedFaculty);
+
+            restTemplate.put(baseUrl, updateStudent);
+
+            // GET
+            Student updated = restTemplate.getForObject(baseUrl + "/" + studentId, Student.class);
+            Assertions.assertEquals("Updated Test Student", updated.getName());
+            Assertions.assertEquals(18, updated.getAge());
+            Assertions.assertNotNull(updated.getFaculty());
+
+        } finally {
+            restTemplate.delete(baseUrl + "/" + studentId);
+            ResponseEntity<Student> response = restTemplate.getForEntity(baseUrl + "/" + studentId, Student.class);
+            Assertions.assertEquals(500, response.getStatusCodeValue());
+        }
     }
 
 }

@@ -27,12 +27,6 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getStudent(Long id) {
-        logger.info("Был выполнен метод getStudent()");
-        return studentRepository.findById(id).get();
-    }
-
-    @Override
     public Student editStudent(Student student) {
         logger.info("Был выполнен метод editStudent()");
         return studentRepository.save(student);
@@ -42,6 +36,11 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudent(Long id) {
         logger.info("Был выполнен метод deleteStudent()");
         studentRepository.deleteById(id);
+    }
+    @Override
+    public Student getStudent(Long id) {
+        logger.info("Был выполнен метод getStudent()");
+        return studentRepository.findById(id).get();
     }
 
     @Override
