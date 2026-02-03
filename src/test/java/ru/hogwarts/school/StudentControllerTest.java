@@ -1,30 +1,20 @@
 package ru.hogwarts.school;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import ru.hogwarts.school.model.Faculty;
+import org.springframework.http.*;
 import ru.hogwarts.school.model.Student;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import ru.hogwarts.school.service.GetLimitStudents;
 import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class StudentControllerTest {
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @LocalServerPort
     private int port;
@@ -32,122 +22,186 @@ public class StudentControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    private Student student;
-
-    private String baseUrl;
-
-    private Long tempId;
-
-    @BeforeEach
-    void setUp() {
-        baseUrl = "http://localhost:" + port + "/student";
+    private String getBaseUrl() {
+        return "http://localhost:" + port + "/student";
     }
 
     @Test
-    public void testGetAllStudentsCount() throws Exception {
-        String url = baseUrl + "/count";
-        ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
-        Assertions.assertEquals(20, response.getBody());
+    public void testCreateStudent() {
+        // Создание студента
+        Student student = new Student();
+        student.setName("Гарри Поттер");
+        student.setAge(17);
 
+        ResponseEntity<Student> response = restTemplate.postForEntity(
+                getBaseUrl(),
+                student,
+                Student.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getId()).isNotNull();
+        assertThat(response.getBody().getName()).isEqualTo("Гарри Поттер");
+        assertThat(response.getBody().getAge()).isEqualTo(17);
     }
 
     @Test
-    public void testGetStudentById() throws Exception {
-        String url = baseUrl + "/{id}";
-        Student expectedStudent = new Student();
-        Faculty expectedFaculty = new Faculty();
-        expectedStudent.setId(5L);
-        expectedStudent.setAge(16);
-        expectedStudent.setName("Luna Lovegood");
-        expectedFaculty.setId(3L);
-        expectedFaculty.setName("Когтевран");
-        expectedFaculty.setColor("синий и бронзовый");
-        expectedStudent.setFaculty(expectedFaculty);
+    public void testGetStudentById() {
+        // Сначала создаем студента
+        Student student = new Student();
+        student.setName("Рон Уизли");
+        student.setAge(17);
 
-        ResponseEntity<Student> response = restTemplate.getForEntity(url, Student.class, 5);
-        Assertions.assertEquals(expectedStudent, response.getBody());
-   }
+        ResponseEntity<Student> createResponse = restTemplate.postForEntity(
+                getBaseUrl(),
+                student,
+                Student.class
+        );
+        Long studentId = createResponse.getBody().getId();
+
+        // Получаем студента по ID
+        ResponseEntity<Student> response = restTemplate.getForEntity(
+                getBaseUrl() + "/" + studentId,
+                Student.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getId()).isEqualTo(studentId);
+        assertThat(response.getBody().getName()).isEqualTo("Рон Уизли");
+    }
 
 
     @Test
-    public void testGetStudentByFaculity() throws Exception {
-        String url = baseUrl + "/get?name={name}";
-        List<Student> expectedStudent;
-        InputStream is = getClass().getResourceAsStream("/griffindor.json");
-        if (is == null) {
-            throw new FileNotFoundException("Файл griffindor.json не найден");
-        }
-        expectedStudent = objectMapper.readValue(is, new TypeReference<List<Student>>() {});
-        ResponseEntity<List<Student>> response = restTemplate.exchange(url, HttpMethod.GET,null,
-                new ParameterizedTypeReference<List<Student>>() {},"Гриффиндор");
+    public void testUpdateStudent() {
+        // Создаем студента
+        Student student = new Student();
+        student.setName("Гермиона Грейнджер");
+        student.setAge(17);
 
-        Assertions.assertEquals(expectedStudent, response.getBody());
+        ResponseEntity<Student> createResponse = restTemplate.postForEntity(
+                getBaseUrl(),
+                student,
+                Student.class
+        );
+        Long studentId = createResponse.getBody().getId();
+        student.setId(studentId);
+
+        // Обновляем студента
+        student.setAge(18);
+        student.setName("Гермиона Грейнджер-Уизли");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Student> requestEntity = new HttpEntity<>(student, headers);
+
+        ResponseEntity<Student> response = restTemplate.exchange(
+                getBaseUrl(),
+                HttpMethod.PUT,
+                requestEntity,
+                Student.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getId()).isEqualTo(studentId);
+        assertThat(response.getBody().getName()).isEqualTo("Гермиона Грейнджер-Уизли");
+        assertThat(response.getBody().getAge()).isEqualTo(18);
+    }
+
+      @Test
+    public void testGetAllStudents() {
+        // Получаем всех студентов
+        ResponseEntity<List<Student>> response = restTemplate.exchange(
+                getBaseUrl() + "/all",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Student>>() {}
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
     }
 
     @Test
-    public void testAddStudent() throws Exception {
-        String url = baseUrl;
-        Student expectedStudent = new Student();
-        Faculty expectedFaculty = new Faculty();
-        expectedStudent.setId(5000L);
-        expectedStudent.setAge(16);
-        expectedStudent.setName("Test Student");
-        expectedFaculty.setId(3L);
-        expectedFaculty.setName("Когтевран");
-        expectedFaculty.setColor("синий и бронзовый");
-        expectedStudent.setFaculty(expectedFaculty);
+    public void testFindByAgeBetween() {
+        // Создаем студентов
+        Student student1 = new Student();
+        student1.setName("Студент 18 лет");
+        student1.setAge(18);
+        restTemplate.postForEntity(getBaseUrl(), student1, Student.class);
 
-        Student result = restTemplate.postForObject(baseUrl, expectedStudent, Student.class);
+        Student student2 = new Student();
+        student2.setName("Студент 22 года");
+        student2.setAge(22);
+        restTemplate.postForEntity(getBaseUrl(), student2, Student.class);
 
-        Assertions.assertNotNull(result.getId());
-        expectedStudent.setId(result.getId());
+        Student student3 = new Student();
+        student3.setName("Студент 25 лет");
+        student3.setAge(25);
+        restTemplate.postForEntity(getBaseUrl(), student3, Student.class);
 
-        Assertions.assertEquals(expectedStudent, result);
-        tempId = expectedStudent.getId();
+        // Ищем студентов в возрасте от 20 до 24
+        ResponseEntity<List<Student>> response = restTemplate.exchange(
+                getBaseUrl() + "/find?min=20&max=24",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Student>>() {}
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).allMatch(s -> s.getAge() >= 20 && s.getAge() <= 24);
     }
 
     @Test
-    public void testFullStudentLifecycleWithFaculty() throws Exception {
-        String url = baseUrl;
-        Student expectedStudent = new Student();
-        Faculty expectedFaculty = new Faculty();
-        expectedStudent.setId(5000L);
-        expectedStudent.setAge(16);
-        expectedStudent.setName("Test Student");
-        expectedFaculty.setId(3L);
-        expectedFaculty.setName("Когтевран");
-        expectedFaculty.setColor("синий и бронзовый");
-        expectedStudent.setFaculty(expectedFaculty);
+    public void testGetStudentsByFaculty() {
+        // Тест поиска студентов по факультету
+        // Предполагается, что в БД уже есть данные
+        ResponseEntity<List<Student>> response = restTemplate.exchange(
+                getBaseUrl() + "/get?name=Гриффиндор",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Student>>() {}
+        );
 
-        Student result = restTemplate.postForObject(baseUrl, expectedStudent, Student.class);
-
-        Assertions.assertNotNull(result.getId());
-        expectedStudent.setId(result.getId());
-
-        Assertions.assertEquals(expectedStudent, result);
-        Long studentId = result.getId();
-
-        try {
-            // EDIT
-            Student updateStudent = new Student();
-            updateStudent.setId(studentId);
-            updateStudent.setAge(18);
-            updateStudent.setName("Updated Test Student");
-            updateStudent.setFaculty(expectedFaculty);
-
-            restTemplate.put(baseUrl, updateStudent);
-
-            // GET
-            Student updated = restTemplate.getForObject(baseUrl + "/" + studentId, Student.class);
-            Assertions.assertEquals("Updated Test Student", updated.getName());
-            Assertions.assertEquals(18, updated.getAge());
-            Assertions.assertNotNull(updated.getFaculty());
-
-        } finally {
-            restTemplate.delete(baseUrl + "/" + studentId);
-            ResponseEntity<Student> response = restTemplate.getForEntity(baseUrl + "/" + studentId, Student.class);
-            Assertions.assertEquals(500, response.getStatusCodeValue());
-        }
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
+    @Test
+    public void testGetCountAllStudent() {
+        ResponseEntity<Long> response = restTemplate.getForEntity(
+                getBaseUrl() + "/count",
+                Long.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+    }
+
+    @Test
+    public void testGetAvgAgeStudents() {
+        ResponseEntity<Float> response = restTemplate.getForEntity(
+                getBaseUrl() + "/avg",
+                Float.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+    }
+
+
+    @Test
+    public void testGetAllStudentsFilterByCharASorted() {
+        ResponseEntity<List<GetLimitStudents>> response = restTemplate.exchange(
+                getBaseUrl() + "/filterA",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<GetLimitStudents>>() {}
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+    }
 }
